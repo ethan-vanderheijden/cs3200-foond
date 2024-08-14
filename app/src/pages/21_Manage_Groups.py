@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Backend URL
-backend_url = "http://localhost:5000/groups"
+backend_url = "http://api:4000/groups"
 
 
 # Function to display users in a group

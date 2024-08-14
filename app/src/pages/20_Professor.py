@@ -4,7 +4,7 @@ import requests
 from modules.nav import SideBarLinks
 
 # Backend URL
-backend_url = "http://localhost:5000/groups"
+backend_url = "http://api:4000/groups"
 
 # Set up the page configuration and sidebar links
 st.set_page_config(layout="wide")

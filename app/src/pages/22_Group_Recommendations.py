@@ -32,7 +32,7 @@ st.title("Generate Group Recommendations")
 groupId = st.text_input("Enter Group ID")
 if st.button("Generate Recommendations"):
     # Call the backend API to generate recommendations for the group
-    response = requests.get(f"http://localhost:5000/groups/{groupId}/recommendation")
+    response = requests.get(f"http://api:4000/groups/{groupId}/recommendation")
     if response.status_code == 200:
         recommendations = response.json()
         st.write(f"Recommendations for group {groupId}:")

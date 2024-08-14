@@ -167,7 +167,7 @@ CREATE TABLE Recommendation_Review
     seqNum         INT,
     custId         INT,
     dateGiven      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    comment        varchar(255),
+    comment        varchar(2000),
     dietScore      INT,
     priceScore     INT,
     cuisineScore   INT,
