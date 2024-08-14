@@ -72,7 +72,7 @@ def restaurant(rest_id):
                         elif pref_table == "Operating_Hours":
                             inner_cursor.execute(
                                 f"""
-                                select o.dayOfWeek, o.hourRange
+                                select o.dayOfWeek, o.startTime, o.endTime
                                 from Operating_Hours o join Restaurant r on o.restId = r.id
                                 where r.id = %s
                                 """,
