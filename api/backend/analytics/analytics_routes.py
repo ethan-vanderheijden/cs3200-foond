@@ -13,11 +13,12 @@ def get_lowest_average(category):
     with get_cursor() as cursor:
         cursor.execute(
             f"""
-            select r.name, avg(rr.{category}Score) as avg_score
-            from Restaurant r
-            join Recommendation_Review rr on r.id = rr.restaurantId
+            select re.name, avg(rr.{category}Score) as avg_score
+            from Restaurant re
+            join Recommendation r on re.id = r.restId
+            join Recommendation_Review rr on r.custId = rr.custId AND r.seqNum = rr.seqNum
             where rr.{category}Score is not null
-            group by r.name
+            group by re.name
             order by avg_score asc
             limit 10
             """

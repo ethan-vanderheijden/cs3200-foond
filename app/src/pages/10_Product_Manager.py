@@ -20,3 +20,6 @@ if st.button("View Analytics", type="primary", use_container_width=True):
 
 if st.button("Edit Restaurant Details", type="primary", use_container_width=True):
     st.switch_page("pages/12_Edit_Restaurant.py")
+
+if st.button("Delete Restaurant Reviews", type="primary", use_container_width=True):
+    st.switch_page("pages/15_Reviews.py")

@@ -1,7 +1,11 @@
 import streamlit as st
 import requests
+from modules.nav import SideBarLinks
 
 st.title("Restaurant Analytics")
+
+# Call the SideBarLinks from the nav module in the modules directory
+SideBarLinks()
 
 # Select category
 category = st.selectbox("Select Category", ["price", "cuisine", "formality"])

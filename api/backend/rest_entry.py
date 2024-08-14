@@ -10,6 +10,8 @@ from flask import Flask
 from backend.db_connection import init_db, cleanup_db
 from backend.customers.customer_routes import customers
 from backend.preferences.preference_routes import preferences
+from backend.reviews.review_routes import reviews
+from backend.analytics.analytics_routes import analytics
 
 
 def create_app():
@@ -42,6 +44,8 @@ def create_app():
 
     app.register_blueprint(customers)
     app.register_blueprint(preferences)
+    app.register_blueprint(reviews)
+    app.register_blueprint(analytics)
 
     # Don't forget to return the app object
     return app
