@@ -1,100 +1,84 @@
 import logging
 
 logger = logging.getLogger(__name__)
-import streamlit as st
-from streamlit_extras.app_logo import add_logo
 import pandas as pd
-import pydeck as pdk
-from urllib.error import URLError
+import streamlit as st
+import requests
 from modules.nav import SideBarLinks
+
+USER_ID = 1
+
+
+def generate_recommendation():
+    st.session_state["accepted_row"] = None
+    st.session_state.recommendation = requests.post(
+        "http://api:4000/customers/" + str(USER_ID) + "/recommendations"
+    ).json()
+
+
+def accept_recommendation(row_num, rec_seq_num):
+    st.session_state.accepted_row = row_num
+    requests.put(
+        "http://api:4000/customers/" + str(USER_ID) + "/recommendations/" + str(rec_seq_num),
+        json={
+            "accepted": True,
+        },
+    )
+
 
 SideBarLinks()
 
-# add the logo
-add_logo("assets/logo.png", height=400)
+st.title("Recommendations")
 
-# set up the page
-st.markdown("# Mapping Demo")
-st.sidebar.header("Mapping Demo")
-st.write(
-    """This Mapping Demo is from the Streamlit Documentation. It shows how to use
-[`st.pydeck_chart`](https://docs.streamlit.io/library/api-reference/charts/st.pydeck_chart)
-to display geospatial data."""
+st.write("Generate recommendations based on your profile")
+
+st.button(
+    "Reroll Recommendations",
+    type="primary",
+    use_container_width=True,
+    on_click=generate_recommendation,
 )
 
+if "accepted_row" not in st.session_state:
+    st.session_state["accepted_row"] = None
 
-@st.cache_data
-def from_data_file(filename):
-    url = "http://raw.githubusercontent.com/streamlit/" "example-data/master/hello/v1/%s" % filename
-    return pd.read_json(url)
+if "recommendation" not in st.session_state:
+    st.session_state["recommendation"] = None
 
 
-try:
-    ALL_LAYERS = {
-        "Bike Rentals": pdk.Layer(
-            "HexagonLayer",
-            data=from_data_file("bike_rental_stats.json"),
-            get_position=["lon", "lat"],
-            radius=200,
-            elevation_scale=4,
-            elevation_range=[0, 1000],
-            extruded=True,
-        ),
-        "Bart Stop Exits": pdk.Layer(
-            "ScatterplotLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_color=[200, 30, 0, 160],
-            get_radius="[exits]",
-            radius_scale=0.05,
-        ),
-        "Bart Stop Names": pdk.Layer(
-            "TextLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_text="name",
-            get_color=[0, 0, 0, 200],
-            get_size=15,
-            get_alignment_baseline="'bottom'",
-        ),
-        "Outbound Flow": pdk.Layer(
-            "ArcLayer",
-            data=from_data_file("bart_path_stats.json"),
-            get_source_position=["lon", "lat"],
-            get_target_position=["lon2", "lat2"],
-            get_source_color=[200, 30, 0, 160],
-            get_target_color=[200, 30, 0, 160],
-            auto_highlight=True,
-            width_scale=0.0001,
-            get_width="outbound",
-            width_min_pixels=3,
-            width_max_pixels=30,
-        ),
-    }
-    st.sidebar.markdown("### Map Layers")
-    selected_layers = [
-        layer for layer_name, layer in ALL_LAYERS.items() if st.sidebar.checkbox(layer_name, True)
-    ]
-    if selected_layers:
-        st.pydeck_chart(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/light-v9",
-                initial_view_state={
-                    "latitude": 37.76,
-                    "longitude": -122.4,
-                    "zoom": 11,
-                    "pitch": 50,
-                },
-                layers=selected_layers,
-            )
-        )
-    else:
-        st.error("Please choose at least one layer above.")
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
+if st.session_state.recommendation is not None:
+    table_df = pd.DataFrame(
+        [item["restId"] for item in st.session_state.recommendation], columns=["id"]
     )
+
+    on_select = "rerun"
+    styled_df = table_df
+    if st.session_state.accepted_row is not None:
+        on_select = "ignore"
+        styled_df = table_df.style.applymap(
+            lambda _: "background-color: LightGreen;",
+            subset=([st.session_state.accepted_row], slice(None)),
+        )
+    table_display = st.dataframe(
+        styled_df,
+        use_container_width=True,
+        hide_index=True,
+        selection_mode="single-row",
+        on_select=on_select,
+    )
+
+    if table_df.empty:
+        st.write("_Empty? [Edit your preferences](/Edit_Profile) and try to be less picky_")
+    else:
+        st.write("_Not what you are looking for? [Edit your preferences](/Edit_Profile)!_")
+
+    if st.session_state.accepted_row is None and len(table_display.selection.rows) > 0:
+        row_num = table_display.selection.rows[0]
+        rec_seq_num = st.session_state.recommendation[row_num]["seqNum"]
+        st.button(
+            "Accept recommendation for id=" + str(rec_seq_num) + "?",
+            use_container_width=True,
+            type="primary",
+            on_click=accept_recommendation,
+            args=(row_num, rec_seq_num),
+        )
