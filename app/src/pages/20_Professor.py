@@ -118,6 +118,3 @@ elif st.session_state.page == "Generate Group Recommendations":
     groupId = st.text_input("Enter Group ID")
     if st.button("Generate Recommendations"):
         generate_group_recommendations(groupId)
-
-if st.sidebar.button("Logout"):
-    st.write("You have been logged out.")  # In a real app, handle the logout process properly
