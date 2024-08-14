@@ -78,8 +78,8 @@ def restaurant(rest_id):
                                 """,
                                 rest_id,
                             )
-                        ids = inner_cursor.fetchall()
-                        return [item["id"] for item in ids]
+                        rests = inner_cursor.fetchall()
+                        return rests
 
                 rest_data["diet"] = get_rest_info("Diet_Category")
                 rest_data["cuisine"] = get_rest_info("Cuisine")
