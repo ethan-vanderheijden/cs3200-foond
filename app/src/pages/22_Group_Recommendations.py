@@ -14,18 +14,28 @@ if st.sidebar.button("Home"):
     st.session_state["page"] = "home"
     st.experimental_rerun()
 
+if st.sidebar.button("Manage Groups"):
+    st.session_state["page"] = "manage_groups"
+    st.experimental_rerun()
+
+if st.sidebar.button("Generate Group Recommendations"):
+    st.session_state["page"] = "generate_recommendations"
+    st.experimental_rerun()
+
+if st.sidebar.button("About"):
+    st.session_state["page"] = "about"
+    st.experimental_rerun()
+
 # Main content of the page
 st.title("Generate Group Recommendations")
 
-# Group ID input
 groupId = st.text_input("Enter Group ID")
-
 if st.button("Generate Recommendations"):
     # Call the backend API to generate recommendations for the group
     response = requests.get(f"http://localhost:5000/groups/{groupId}/recommendation")
     if response.status_code == 200:
         recommendations = response.json()
-        st.write(f"Recommendations for Group {groupId}:")
+        st.write(f"Recommendations for group {groupId}:")
         for rec in recommendations:
             st.write(f"- {rec['explanation']} (Restaurant ID: {rec['restId']})")
     else:
