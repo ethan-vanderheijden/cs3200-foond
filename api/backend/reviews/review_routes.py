@@ -7,7 +7,7 @@ reviews = Blueprint("reviews", __name__, url_prefix="/reviews")
 @reviews.route("/<cust_id>/<seq_num>", methods=["POST", "DELETE"])
 def reviews_info(cust_id, seq_num):
     data = request.json
-    if request.method == "GET":
+    if request.method == "POST":
         with get_cursor() as cursor:
             cursor.execute(
                 f"""

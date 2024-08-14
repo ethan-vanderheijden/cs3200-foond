@@ -10,8 +10,8 @@ USE foond;
 CREATE TABLE Customer
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
-    longitude     FLOAT,
-    latitude      FLOAT,
+    longitude     DOUBLE,
+    latitude      DOUBLE,
     email         VARCHAR(255) UNIQUE NOT NULL,
     firstName     VARCHAR(255)        NOT NULL,
     middleInitial CHAR(1),
@@ -86,8 +86,8 @@ CREATE TABLE Rest_Diet
 CREATE TABLE Location
 (
     restId    INT,
-    latitude  FLOAT,
-    longitude FLOAT,
+    latitude  DOUBLE,
+    longitude DOUBLE,
     PRIMARY KEY (restId, latitude, longitude),
     CONSTRAINT fk_loc
         FOREIGN KEY (restId) REFERENCES Restaurant (id)
@@ -167,7 +167,7 @@ CREATE TABLE Recommendation_Review
     seqNum         INT,
     custId         INT,
     dateGiven      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    comment        varchar(255),
+    comment        varchar(2000),
     dietScore      INT,
     priceScore     INT,
     cuisineScore   INT,
