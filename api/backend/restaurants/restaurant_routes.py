@@ -116,39 +116,39 @@ def restaurant(rest_id):
                 },
             )
 
-        def rebuild_restaurant(table, fields, data):
-            with get_cursor() as cursor:
-                cursor.execute(f"delete from {table} where restId = %s", rest_id)
-
-                if data:
-                    values = ""
-                    for item in data:
-                        values += f"{','.join(item)}, "
-                        values = values.rstrip(",")
-
-                        cursor.execute(
-                            f"""
-                            insert into {table} ({','.join(fields)})
-                            values {values}
-                            """
-                        )
-
-        diet_values = [(rest_id, dId) for dId in data["restaurantDiet"]]
-        cuisine_values = [(rest_id, cId) for cId in data["restaurantCuisine"]]
-        loc_values = [
-            (rest_id, longitude, latitude) for longitude, latitude in data["restaurantLocation"]
-        ]
-        oh_values = [
-            (rest_id, dayOfWeek, startTime, endTime)
-            for dayOfWeek, startTime, endTime in data["restaurantOH"]
-        ]
-
-        rebuild_restaurant("Rest_Diet", ["restId", "dietId"], diet_values)
-        rebuild_restaurant("Rest_Cuisine", ["restId", "cuisineId"], cuisine_values)
-        rebuild_restaurant("Location", ["restId", "longitude", "latitude"], loc_values)
-        rebuild_restaurant(
-            "Operating_Hours", ["restId", "dayOfWeek", "startTime", "endTime"], oh_values
-        )
+        # def rebuild_restaurant(table, fields, data):
+        #     with get_cursor() as cursor:
+        #         cursor.execute(f"delete from {table} where restId = %s", rest_id)
+        #
+        #         if data:
+        #             values = ""
+        #             for item in data:
+        #                 values += f"{','.join(item)}, "
+        #                 values = values.rstrip(",")
+        #
+        #                 cursor.execute(
+        #                     f"""
+        #                     insert into {table} ({','.join(fields)})
+        #                     values {values}
+        #                     """
+        #                 )
+        #
+        # diet_values = [(rest_id, dId) for dId in data["restaurantDiet"]]
+        # cuisine_values = [(rest_id, cId) for cId in data["restaurantCuisine"]]
+        # loc_values = [
+        #     (rest_id, longitude, latitude) for longitude, latitude in data["restaurantLocation"]
+        # ]
+        # oh_values = [
+        #     (rest_id, dayOfWeek, startTime, endTime)
+        #     for dayOfWeek, startTime, endTime in data["restaurantOH"]
+        # ]
+        #
+        # rebuild_restaurant("Rest_Diet", ["restId", "dietId"], diet_values)
+        # rebuild_restaurant("Rest_Cuisine", ["restId", "cuisineId"], cuisine_values)
+        # rebuild_restaurant("Location", ["restId", "longitude", "latitude"], loc_values)
+        # rebuild_restaurant(
+        #     "Operating_Hours", ["restId", "dayOfWeek", "startTime", "endTime"], oh_values
+        # )
 
         return ""
 
