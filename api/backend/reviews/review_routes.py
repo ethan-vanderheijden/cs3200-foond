@@ -6,8 +6,8 @@ reviews = Blueprint("reviews", __name__, url_prefix="/reviews")
 
 @reviews.route("/<cust_id>/<seq_num>", methods=["POST", "DELETE"])
 def reviews_info(cust_id, seq_num):
-    data = request.json
     if request.method == "POST":
+        data = request.json
         with get_cursor() as cursor:
             cursor.execute(
                 f"""
@@ -22,11 +22,10 @@ def reviews_info(cust_id, seq_num):
     elif request.method == "DELETE":
         with get_cursor() as cursor:
             cursor.execute(
-                f"""
+                """
                 delete from Recommendation_Review where custId = %(cust)s and seqNum = %(seq)s
                 """,
-                {"cust": cust_id},
-                {"seq": seq_num},
+                {"cust": cust_id, "seq": seq_num},
             )
             return ""
 
