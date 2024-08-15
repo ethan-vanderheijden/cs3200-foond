@@ -151,3 +151,42 @@ def restaurant(rest_id):
         )
 
         return ""
+
+
+@restaurants.route("/<int:restaurantID>/reviews", methods=["GET"])
+def get_restaurant_reviews(restaurantID):
+    try:
+        with get_cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    r.name AS restaurant_name,
+                    rr.custId,
+                    rr.seqNum,
+                    rr.comment AS review_text,
+                    rr.dietScore,
+                    rr.priceScore,
+                    rr.cuisineScore,
+                    rr.formalityScore,
+                    rr.locationScore
+                FROM 
+                    Restaurant r
+                JOIN 
+                    Recommendation re ON r.id = re.restId
+                JOIN 
+                    Recommendation_Review rr ON re.custId = rr.custId AND re.seqNum = rr.seqNum
+                WHERE 
+                    r.id = %s
+                """,
+                (restaurantID,),
+            )
+            records = cursor.fetchall()
+
+        if records:
+            return records, 200
+        else:
+            return {"error": "No reviews found for this restaurant"}, 404
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching reviews: {e}")
+        return {"error": "An error occurred while fetching reviews"}, 500
