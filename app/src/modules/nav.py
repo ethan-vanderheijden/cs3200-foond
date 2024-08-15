@@ -25,6 +25,9 @@ def ProductManagerNav():
     st.sidebar.page_link("pages/10_Product_Manager.py", label="Product Manager Home", icon="🛜")
     st.sidebar.page_link("pages/11_Analytics.py", label="Analytics", icon="📈")
     st.sidebar.page_link("pages/12_Edit_Restaurant.py", label="Edit Restaurant Details", icon="🌺")
+    st.sidebar.page_link(
+        "pages/13_Restaurant_Search.py", label="Search Restaurant Reviews", icon="🔎︎"
+    )
 
 
 def ProfessorNav():
