@@ -45,11 +45,12 @@ def remove_user_from_group(groupId, user_id):
 
 
 # Function to create a new group
-def create_new_group(groupId, description=""):
-    payload = {"name": groupId, "description": description}
+def create_new_group(name, description=""):
+    payload = {"name": name, "description": description}
     response = requests.post(backend_url, json=payload)
     if response.status_code == 201:
-        st.success(f"New group {groupId} created")
+        new_id = response.json()["newId"]
+        st.success(f"New group created with id = {new_id}. Remember this id!")
     else:
         st.error("Failed to create group")
 
@@ -92,24 +93,26 @@ if st.session_state.page == "Manage Groups":
         ],
     )
 
-    groupId = st.text_input("Enter Group ID")
-
     if st.session_state.action == "Create New Group":
+        group_name = st.text_input("Enter Name")
         description = st.text_input("Enter Group Description")
         if st.button("Create Group"):
-            create_new_group(groupId, description)
+            create_new_group(group_name, description)
 
     elif st.session_state.action == "Add User to Group":
+        groupId = st.text_input("Enter Group ID")
         user_id = st.text_input("Enter User ID to Add")
         if st.button("Add User"):
             add_user_to_group(groupId, user_id)
 
     elif st.session_state.action == "Remove User from Group":
+        groupId = st.text_input("Enter Group ID")
         user_id = st.text_input("Enter User ID to Remove")
         if st.button("Remove User"):
             remove_user_from_group(groupId, user_id)
 
     elif st.session_state.action == "Display Users in Group":
+        groupId = st.text_input("Enter Group ID")
         if st.button("Display Users"):
             display_users_in_group(groupId)
 

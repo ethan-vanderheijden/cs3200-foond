@@ -28,8 +28,11 @@ def create_group():
     try:
         with get_cursor() as cursor:
             cursor.execute(query, params)
-            logger.info(f"Group created: {group_name} with description: {description}")
-            return jsonify({"message": "Group created successfully"}), 201
+            insert_id = cursor.lastrowid
+            logger.info(
+                f"Group ({insert_id}) created with name: {group_name} and description: {description}"
+            )
+            return jsonify({"newId": insert_id}), 201
     except Exception as e:
         logger.error(f"Failed to create group: {str(e)}")
         return jsonify({"error": "Failed to create group", "details": str(e)}), 500
