@@ -43,7 +43,7 @@ if st.button("Update"):
         "formality_id": formalityId,
     }
 
-    result = requests.put("http://api:4000/restaurant", json=data)
+    result = requests.put("http://api:4000/restaurants", json=data)
 
 # """
 # Simply retrieving data from a REST api running in a separate Docker Container.

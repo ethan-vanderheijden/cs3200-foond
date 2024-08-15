@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-from flask import Blueprint
-
-
-=======
 from flask import Blueprint, request
->>>>>>> 79f8342a434f78f54e8dfd49f38c84e51aa18ada
 from backend.db_connection import get_cursor
 
 customers = Blueprint("customers", __name__, url_prefix="/customers")
@@ -12,18 +6,6 @@ customers = Blueprint("customers", __name__, url_prefix="/customers")
 
 # Get customer detail for customer with particular <cust_id>
 # Includes basic info like name and email as well as preference data
-<<<<<<< HEAD
-@customers.route("/<cust_id>", methods=["GET"])
-def get_customers():
-    cursor = get_cursor()
-    query = "Select * from Customer"
-    cursor.execute(query)
-    data = cursor.fetch_all()
-    response = make_response(data)
-    response.status_code = 200
-    response.mimetime = "application/json"
-    return response
-=======
 @customers.route("/<cust_id>", methods=["GET", "PUT"])
 def customer_info(cust_id):
     if request.method == "GET":
@@ -232,4 +214,3 @@ def accept_recommendation(cust_id, seq_num):
             },
         )
         return ""
->>>>>>> 79f8342a434f78f54e8dfd49f38c84e51aa18ada

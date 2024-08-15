@@ -3,7 +3,6 @@ from backend.db_connection import get_cursor
 
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
 
-
 @restaurants.route("/<rest_id>", methods=["GET", "PUT"])
 def restaurant(rest_id):
     if request.method == "GET":

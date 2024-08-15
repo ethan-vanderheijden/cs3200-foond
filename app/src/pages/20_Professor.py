@@ -54,6 +54,15 @@ def create_new_group(name, description=""):
     else:
         st.error("Failed to create group")
 
+def display_recommendation_for_group(groupId):
+    response = requests.get(f"{backend_url}/{groupId}/recommendations")
+    print(response)
+    if response.status_code == 200:
+        members = response.json()
+        st.write(f"Recommendation for {groupId}:")
+        st.write(members)
+    else:
+        st.error("Group not found")
 
 # Initialize session state for page and action
 if "page" not in st.session_state:
@@ -78,6 +87,7 @@ if st.session_state.page == "Manage Groups":
             "Add User to Group",
             "Remove User from Group",
             "Display Users in Group",
+            "Generate Group Recommendations",
         ],
     )
 
@@ -104,8 +114,7 @@ if st.session_state.page == "Manage Groups":
         if st.button("Display Users"):
             display_users_in_group(groupId)
 
-elif st.session_state.page == "Generate Group Recommendations":
-    st.header("Generate Group Recommendations")
-    groupId = st.text_input("Enter Group ID")
-    if st.button("Generate Recommendations"):
-        st.write("TODO...")
+    elif st.session_state.action == "Generate Group Recommendations":
+        groupId = st.text_input("Enter Group ID")
+        if st.button("Display Users"):
+            display_recommendation_for_group(groupId)

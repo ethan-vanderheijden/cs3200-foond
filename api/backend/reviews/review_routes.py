@@ -20,13 +20,11 @@ def reviews_info(cust_id, seq_num):
             )
             return ""
     elif request.method == "DELETE":
+        sql = """
+            delete from Recommendation_Review where custId = """ + str(cust_id) + """ and seqNum = """ + str(seq_num) + """
+        """
         with get_cursor() as cursor:
-            cursor.execute(
-                """
-                delete from Recommendation_Review where custId = %(cust)s and seqNum = %(seq)s
-                """,
-                {"cust": cust_id, "seq": seq_num},
-            )
+            cursor.execute(sql)
             return ""
 
     current_app.logger.info(data)
