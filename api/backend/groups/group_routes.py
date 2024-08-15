@@ -101,25 +101,3 @@ def get_group_members(group_id):
     except Exception as e:
         logger.error(f"Failed to retrieve group members: {str(e)}")
         return jsonify({"error": "Failed to retrieve group members", "details": str(e)}), 500
-
-
-# Route to generate group recommendations
-@groups.route("/<group_id>/recommendation", methods=["GET"])
-def generate_group_recommendation(group_id):
-    query = """
-        SELECT Restaurant.id as restId, Restaurant.name, Restaurant.email, Recommendation.explanation
-        FROM Recommendation
-        JOIN Restaurant ON Recommendation.restId = Restaurant.id
-        WHERE Recommendation.groupId = %s
-    """
-    params = (group_id,)
-
-    try:
-        with get_cursor() as cursor:
-            cursor.execute(query, params)
-            recommendations = cursor.fetchall()
-            logger.info(f"Generated recommendations for group {group_id}")
-            return jsonify(recommendations), 200
-    except Exception as e:
-        logger.error(f"Failed to generate recommendations: {str(e)}")
-        return jsonify({"error": "Failed to generate recommendations", "details": str(e)}), 500

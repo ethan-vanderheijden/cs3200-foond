@@ -55,18 +55,6 @@ def create_new_group(name, description=""):
         st.error("Failed to create group")
 
 
-# Function to generate group recommendations
-def generate_group_recommendations(groupId):
-    response = requests.get(f"{backend_url}/{groupId}/recommendation")
-    if response.status_code == 200:
-        recommendations = response.json()
-        st.write(f"Recommendations for Group {groupId}:")
-        for rec in recommendations:
-            st.write(f"- {rec['explanation']} (Restaurant ID: {rec['restId']})")
-    else:
-        st.error("Failed to generate recommendations")
-
-
 # Initialize session state for page and action
 if "page" not in st.session_state:
     st.session_state.page = "Professor Home"
@@ -120,4 +108,4 @@ elif st.session_state.page == "Generate Group Recommendations":
     st.header("Generate Group Recommendations")
     groupId = st.text_input("Enter Group ID")
     if st.button("Generate Recommendations"):
-        generate_group_recommendations(groupId)
+        st.write("TODO...")
