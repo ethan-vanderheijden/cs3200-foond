@@ -10,8 +10,9 @@ from flask import Flask
 from backend.db_connection import init_db, cleanup_db
 from backend.customers.customer_routes import customers
 from backend.preferences.preference_routes import preferences
+from backend.restaurants.restaurant_routes import restaurants
 from backend.reviews.review_routes import reviews
-from backend.analytics.analytics_routes import analytics
+from backend.groups.group_routes import groups
 
 
 def create_app():
@@ -20,19 +21,21 @@ def create_app():
     # Load environment variables
     load_dotenv()
 
-    # secret key that will be used for securely signing the session
-    # cookie and can be used for any other security related needs by
-    # extensions or your application
-    # app.config['SECRET_KEY'] = 'someCrazyS3cR3T!Key.!'
+    # Set Flask configuration from environment variables
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
-    init_db(
-        os.getenv("DB_HOST"),
-        int(os.getenv("DB_PORT")),
-        os.getenv("DB_USER"),
-        os.getenv("MYSQL_ROOT_PASSWORD"),
-        os.getenv("DB_NAME"),
-    )
+    # Initialize the database
+    db_host = os.getenv("DB_HOST")
+    db_port = int(os.getenv("DB_PORT", 3306))  # Default to 3306 if not provided
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("MYSQL_ROOT_PASSWORD")
+    db_name = os.getenv("DB_NAME")
+
+    if not all([db_host, db_user, db_password, db_name]):
+        app.logger.error("Missing required database environment variables.")
+        raise ValueError("Missing required database environment variables.")
+
+    init_db(db_host, db_port, db_user, db_password, db_name)
 
     def close_db():
         app.logger.info("Server stopping, closing db")
@@ -40,12 +43,12 @@ def create_app():
 
     atexit.register(close_db)
 
-    app.logger.info("current_app(): registering blueprints with Flask app object.")
-
+    # Register blueprints with Flask app object
     app.register_blueprint(customers)
+    app.register_blueprint(groups)
     app.register_blueprint(preferences)
+    app.register_blueprint(restaurants)
     app.register_blueprint(reviews)
     app.register_blueprint(analytics)
 
-    # Don't forget to return the app object
     return app

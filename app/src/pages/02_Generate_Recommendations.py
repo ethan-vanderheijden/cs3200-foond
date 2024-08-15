@@ -21,6 +21,10 @@ def generate_recommendation():
         "http://api:4000/customers/" + str(USER_ID) + "/recommendations"
     ).json()
 
+    for rec in st.session_state.recommendation:
+        rest_data = requests.get("http://api:4000/restaurants/" + str(rec["restId"]))
+        rec["restData"] = rest_data.json()
+
 
 def accept_recommendation(row_num):
     st.session_state.accepted_row = row_num
@@ -70,8 +74,18 @@ if (
     reset_state()
 
 if st.session_state.recommendation is not None:
+    extracted_data = []
+    for item in st.session_state.recommendation:
+        rest_data = item["restData"]
+        price = "$" + rest_data["price"]["rating"]
+        cuisines = [cuisine["name"] for cuisine in rest_data["cuisine"]]
+        diets = [diet["name"] for diet in rest_data["diet"]]
+        extracted_data.append(
+            [rest_data["name"], price, rest_data["formality"]["name"], cuisines, diets]
+        )
+
     table_df = pd.DataFrame(
-        [item["restId"] for item in st.session_state.recommendation], columns=["id"]
+        extracted_data, columns=["name", "price", "formality", "cuisine", "diet"]
     )
 
     on_select = "rerun"
@@ -82,6 +96,7 @@ if st.session_state.recommendation is not None:
             lambda _: "background-color: LightGreen;",
             subset=([st.session_state.accepted_row], slice(None)),
         )
+
     table_display = st.dataframe(
         styled_df,
         use_container_width=True,
@@ -98,9 +113,9 @@ if st.session_state.recommendation is not None:
 
         if len(table_display.selection.rows) > 0:
             row_num = table_display.selection.rows[0]
-            rec_seq_num = st.session_state.recommendation[row_num]["seqNum"]
+            rest_name = st.session_state.recommendation[row_num]["restData"]["name"]
             st.button(
-                "Accept recommendation for id=" + str(rec_seq_num) + "?",
+                "Accept recommendation for " + str(rest_name) + "?",
                 use_container_width=True,
                 type="primary",
                 on_click=accept_recommendation,
