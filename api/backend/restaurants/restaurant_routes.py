@@ -1,7 +1,13 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, jsonify
 from backend.db_connection import get_cursor
 
+
+
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
+
+@restaurants.route("/", methods=["GET"])
+def restaurant2():
+    return jsonify("")
 
 @restaurants.route("/<rest_id>", methods=["GET", "PUT"])
 def restaurant(rest_id):
@@ -17,7 +23,7 @@ def restaurant(rest_id):
             )
             data = cursor.fetchall()
             if data:
-                rest_data = data[0]
+                '''rest_data = data[0]
 
                 cursor.execute(
                     """
@@ -91,8 +97,8 @@ def restaurant(rest_id):
                     minutes = remainder / 60
                     schedule["endTime"] = "{:02}:{:02}".format(int(hours), int(minutes))
                 rest_data["operating_hours"] = operating_hours
-
-                return rest_data
+                '''
+                return data
             else:
                 return "Invalid restaurants id", 400
 
