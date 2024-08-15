@@ -153,7 +153,7 @@ def restaurant(rest_id):
         return ""
 
 
-@restaurants.route("/restaurants/<int:restaurantID>/reviews", methods=["GET"])
+@restaurants.route("/<int:restaurantID>/reviews", methods=["GET"])
 def get_restaurant_reviews(restaurantID):
     try:
         with get_cursor() as cursor:
@@ -164,7 +164,6 @@ def get_restaurant_reviews(restaurantID):
                     rr.custId,
                     rr.seqNum,
                     rr.comment AS review_text,
-                    re.recommendation,
                     rr.dietScore,
                     rr.priceScore,
                     rr.cuisineScore,
@@ -184,10 +183,10 @@ def get_restaurant_reviews(restaurantID):
             records = cursor.fetchall()
 
         if records:
-            return jsonify(records), 200
+            return records, 200
         else:
-            return jsonify({"error": "No reviews found for this restaurant"}), 404
+            return {"error": "No reviews found for this restaurant"}, 404
 
     except Exception as e:
         current_app.logger.error(f"Error fetching reviews: {e}")
-        return jsonify({"error": "An error occurred while fetching reviews"}), 500
+        return {"error": "An error occurred while fetching reviews"}, 500

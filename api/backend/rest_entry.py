@@ -11,6 +11,7 @@ from backend.db_connection import init_db, cleanup_db
 from backend.customers.customer_routes import customers
 from backend.preferences.preference_routes import preferences
 from backend.restaurants.restaurant_routes import restaurants
+from backend.analytics.analytics_routes import analytics
 from backend.reviews.review_routes import reviews
 from backend.groups.group_routes import groups
 

@@ -22,7 +22,7 @@ def reviews_info(cust_id, seq_num):
     elif request.method == "DELETE":
         with get_cursor() as cursor:
             cursor.execute(
-                f"""
+                """
                 delete from Recommendation_Review where custId = %(cust)s and seqNum = %(seq)s
                 """,
                 {"cust": cust_id, "seq": seq_num},

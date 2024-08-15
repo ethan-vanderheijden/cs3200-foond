@@ -12,19 +12,15 @@ category = st.selectbox("Select Category", ["price", "cuisine", "formality"])
 
 # Button to fetch data
 if st.button("Get Lowest Average Restaurants"):
-    try:
-        response = requests.get(f"http://api:4000/analytics/{category}")
+    response = requests.get(f"http://api:4000/analytics/{category}")
 
-        if response.status_code == 200:
-            data = response.json()
-            if data:
-                st.write(f"Lowest Average {category.capitalize()} Score Restaurants:")
-                for restaurant in data:
-                    st.write(f"- {restaurant['name']}: {restaurant['avg_score']:.2f}")
-            else:
-                st.write("No data found.")
+    if response.status_code == 200:
+        data = response.json()
+        if data:
+            st.write(f"Lowest Average {category.capitalize()} Score Restaurants:")
+            for restaurant in data:
+                st.write(f"- {restaurant['name']}: {restaurant['avg_score']}")
         else:
-            st.error(f"Error: {response.json().get('error')}")
-
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+            st.write("No data found.")
+    else:
+        st.error(f"Error: {response.json().get('error')}")
