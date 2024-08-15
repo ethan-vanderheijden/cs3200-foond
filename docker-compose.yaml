@@ -2,24 +2,28 @@ services:
 
   app:
     build: ./app
-    container_name: front-end 
-    volumes: ['./app/src:/appcode']
-      #    restart: unless-stopped
+    container_name: front-end
+    volumes: [ './app/src:/appcode' ]
+
     ports:
       - 8501:8501
+
+    restart: unless-stopped
 
   api:
     build: ./api
     container_name: web-api
     hostname: web-api
-    volumes: ['./api:/apicode']
-      
+    volumes: [ './api:/apicode' ]
+
     ports:
       - 4000:4000
 
     depends_on:
       db:
         condition: service_healthy
+
+    restart: unless-stopped
 
   db:
     env_file:
@@ -29,10 +33,11 @@ services:
     volumes:
       - ./database-files:/docker-entrypoint-initdb.d/:ro
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 15
-
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 2s
+      retries: 30
+      interval: 5s
+      start_interval: 10s
 
     ports:
       - 3200:3306

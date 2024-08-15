@@ -4,6 +4,6 @@ set -e
 
 files="$(git diff --name-only --cached --diff-filter=ACMTUXBR -- '*.py')"
 for f in $files; do
-    black --line-length 100 "$f"
+    python -m black --line-length 100 "$f"
 done
 git add $files
