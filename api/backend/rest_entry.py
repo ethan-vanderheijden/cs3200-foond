@@ -1,4 +1,7 @@
 import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 import atexit
 import os
 from dotenv import load_dotenv
@@ -6,10 +9,10 @@ from flask import Flask
 
 from backend.db_connection import init_db, cleanup_db
 from backend.customers.customer_routes import customers
-from backend.groups.group_routes import groups  # Import the groups blueprint
-
-# Configure logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from backend.preferences.preference_routes import preferences
+from backend.restaurants.restaurant_routes import restaurants
+from backend.reviews.review_routes import reviews
+from backend.groups.group_routes import groups
 
 
 def create_app():
@@ -43,6 +46,9 @@ def create_app():
     # Register blueprints with Flask app object
     app.register_blueprint(customers)
     app.register_blueprint(groups)
+    app.register_blueprint(preferences)
+    app.register_blueprint(restaurants)
+    app.register_blueprint(reviews)
 
     return app
 
