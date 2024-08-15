@@ -24,11 +24,8 @@ if submit_button:
             if data:
                 st.success(f"Found {len(data)} record(s) for restaurant ID {restaurant_id}.")
                 for record in data:
-                    st.write(f"Restaurant Name: {record['restaurant_name']}")
-                    st.write(f"Customer ID: {record['cust_id']}")
-                    st.write(f"Sequence Number: {record['seq_num']}")
-                    st.write(f"Recommendation: {record['recommendation']}")
-                    st.write(f"Review: {record['review_text']}")
+                    st.write(f"Customer ID: {record['custId']}")
+                    st.write(f"Sequence Number: {record['seqNum']}")
                     st.write(f"Diet Score: {record['dietScore']}")
                     st.write(f"Price Score: {record['priceScore']}")
                     st.write(f"Cuisine Score: {record['cuisineScore']}")
