@@ -112,41 +112,41 @@ def restaurant(rest_id):
             )
 
 
-@restaurants.route("/restaurants/<int:restaurantID>/reviews", methods=["GET"])
+@restaurants.route("/<int:restaurantID>/reviews", methods=["GET"])
 def get_restaurant_reviews(restaurantID):
     try:
-        # Define the SQL query
-        query = text(
-            """
-            SELECT 
-                r.name AS restaurant_name,
-                rr.custId,
-                rr.seqNum,
-                rr.comment AS review_text,
-                re.recommendation,
-                rr.dietScore,
-                rr.priceScore,
-                rr.cuisineScore,
-                rr.formalityScore,
-                rr.locationScore
-            FROM 
-                Restaurant r
-            JOIN 
-                Recommendation re ON r.id = re.restId
-            JOIN 
-                Recommendation_Review rr ON re.custId = rr.custId AND re.seqNum = rr.seqNum
-            WHERE 
-                r.id = :restaurantID;
-        """
-        )
+        with get_cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    r.name AS restaurant_name,
+                    rr.custId,
+                    rr.seqNum,
+                    rr.comment AS review_text,
+                    re.recommendation,
+                    rr.dietScore,
+                    rr.priceScore,
+                    rr.cuisineScore,
+                    rr.formalityScore,
+                    rr.locationScore
+                FROM 
+                    Restaurant r
+                JOIN 
+                    Recommendation re ON r.id = re.restId
+                JOIN 
+                    Recommendation_Review rr ON re.custId = rr.custId AND re.seqNum = rr.seqNum
+                WHERE 
+                    r.id = %s
+                """,
+                (restaurantID,),
+            )
+            records = cursor.fetchall()
 
-        # Execute the query
-        with engine.connect() as connection:
-            result = connection.execute(query, {"restaurantID": restaurantID})
-            records = [dict(row) for row in result]
-
-        # Return the results as JSON
-        return jsonify(records), 200
+        if records:
+            return jsonify(records), 200
+        else:
+            return jsonify({"error": "No reviews found for this restaurant"}), 404
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error fetching reviews: {e}")
+        return jsonify({"error": "An error occurred while fetching reviews"}), 500
