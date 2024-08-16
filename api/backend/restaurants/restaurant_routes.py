@@ -1,6 +1,10 @@
 from flask import Blueprint, request, current_app
 from backend.db_connection import get_cursor
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
 
 
@@ -100,9 +104,10 @@ def restaurant(rest_id):
     elif request.method == "PUT":
         data = request.json
 
-        current_app.logger.info(data["email"])
+        #.info(data["email"])
 
         with get_cursor() as cursor:
+            #current_app.logger.info(**data)
             cursor.execute(
                 """
                 update Restaurant

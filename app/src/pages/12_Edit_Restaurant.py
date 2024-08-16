@@ -45,7 +45,7 @@ def state_1():
             next_state = True
     if next_state:
         st.switch_page("pages/12_Edit_Restaurant.py")
-        
+
 def state_2():
     next_state = False
     rest_id = st.session_state["rest_id"]
@@ -58,7 +58,7 @@ def state_2():
         "formalityId": st.session_state["formaility_id"],
     }
 
-    insert = requests.put(f"http://api:4000/restaurants/{rest_id}/", json=new_data)
+    insert = requests.put(f"http://api:4000/restaurants/{rest_id}", json=new_data)
 
     if insert.status_code == 200:
         st.success("Restaurant updated successfully")
