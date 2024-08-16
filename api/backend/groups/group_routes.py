@@ -105,29 +105,27 @@ def get_group_members(group_id):
 
 @groups.route("/<group_id>/recommendations", methods=["GET"])
 def group_get(group_id):
-    with get_cursor() as cursor:
-        sql = """
+    sql = """
         SELECT cui.name AS name
         FROM Dining_Group dg
         JOIN Cust_Group cg ON dg.id = cg.custId
         JOIN Customer c ON c.id = cg.custId
         JOIN Cust_Cuisine cc ON cc.custId = c.id
-        JOIN Cuisine cui ON cui.id cc.custId
+        JOIN Cuisine cui ON cui.id = cc.custId
         WHERE dg.id = """ + str(group_id) + """
         GROUP BY cui.id, cui.name
         ORDER BY COUNT(c.id)
         LIMIT 1;
         """
-
-
+    with get_cursor() as cursor:
         logger.error(sql)
         try:
             with get_cursor() as cursor:
-                cursor.execute(sql, group_id)
+                cursor.execute(sql)
                 data = cursor.fetchall()
                 logger.error(data)
                 logger.info(f"Retrieved recommendations for group {data}")
                 return jsonify(data), 200
         except Exception as e:
             logger.error(f"Failed to get recommendation: {str(e)}")
-            return jsonify({"error": "Failed to get recommendation", "details": str(e)}), 500
+            return jsonify({"error": "Failed to get recommendation details " + str(e) + " " + sql}), 500

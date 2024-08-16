@@ -1,0 +1,3 @@
+graph {
+    Foond[style=filled, fillcolor =lightblue, color = darkcyan, fontcolor = royalblue]
+}

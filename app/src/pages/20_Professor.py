@@ -62,7 +62,7 @@ def display_recommendation_for_group(groupId):
         st.write(f"Recommendation for {groupId}:")
         st.write(members)
     else:
-        st.error("Group not found")
+        st.error("Group not found " + str(response.json()))
 
 # Initialize session state for page and action
 if "page" not in st.session_state:
@@ -113,8 +113,8 @@ if st.session_state.page == "Manage Groups":
         groupId = st.text_input("Enter Group ID")
         if st.button("Display Users"):
             display_users_in_group(groupId)
-
-    elif st.session_state.action == "Generate Group Recommendations":
-        groupId = st.text_input("Enter Group ID")
-        if st.button("Display Users"):
-            display_recommendation_for_group(groupId)
+elif st.session_state.page == "Generate Group Recommendations":
+    st.session_state.action = "Generate Group Recommendations"
+    groupId = st.text_input("Enter Group ID")
+    if st.button("Display Recommendations"):
+        display_recommendation_for_group(groupId)

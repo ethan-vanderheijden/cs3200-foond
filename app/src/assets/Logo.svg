@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="79pt" height="44pt" viewBox="0.00 0.00 79.44 44">
+<g id="graph0" class="graph" transform="translate(4,40) scale(1)" data-name="">
+<!-- foo -->
+<g id="node1" class="node" pointer-events="visible" data-name="Foond" data-comment="foo">
+
+<ellipse fill="rgb(173, 216, 230)" stroke="rgb(0, 139, 139)" cx="35.72" cy="-18" rx="35.94" ry="18"/>
+<text text-anchor="middle" x="35.72" y="-13.8" font-family="Times,serif" font-size="14.00" fill="rgb(65, 105, 225)">Foond</text>
+</g>
+</g>
+</svg>
