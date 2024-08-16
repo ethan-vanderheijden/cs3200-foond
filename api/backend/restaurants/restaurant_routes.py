@@ -5,18 +5,14 @@ from backend.db_connection import get_cursor
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
 
 
-@restaurants.route("/", methods=["GET"])
-def restaurant2():
-    return jsonify("")
-
-
+# get and update restaurant data
 @restaurants.route("/<rest_id>", methods=["GET", "PUT"])
 def restaurant(rest_id):
     if request.method == "GET":
         with get_cursor() as cursor:
             cursor.execute(
                 """
-                select name, email, phone
+                select id, name, email, phone, priceId, formalityId
                 from Restaurant
                 where id = %s
                 """,
@@ -24,6 +20,7 @@ def restaurant(rest_id):
             )
             data = cursor.fetchall()
             if data:
+                # code for features that were not functional, kept in case of future development
                 '''rest_data = data[0]
 
                 cursor.execute(
@@ -122,6 +119,7 @@ def restaurant(rest_id):
                 },
             )
 
+        # MORE non-functional code, again kept in case of future development
         # def rebuild_restaurant(table, fields, data):
         #     with get_cursor() as cursor:
         #         cursor.execute(f"delete from {table} where restId = %s", rest_id)
