@@ -1,18 +1,16 @@
-from flask import Blueprint, request, current_app, jsonify
+from flask import Blueprint, request, current_app
 from backend.db_connection import get_cursor
-
 
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
 
 
-# get and update restaurant data
 @restaurants.route("/<rest_id>", methods=["GET", "PUT"])
 def restaurant(rest_id):
     if request.method == "GET":
         with get_cursor() as cursor:
             cursor.execute(
                 """
-                select id, name, email, phone, priceId, formalityId
+                select name, email, phone
                 from Restaurant
                 where id = %s
                 """,
@@ -20,8 +18,7 @@ def restaurant(rest_id):
             )
             data = cursor.fetchall()
             if data:
-                # code for features that were not functional, kept in case of future development
-                '''rest_data = data[0]
+                rest_data = data[0]
 
                 cursor.execute(
                     """
@@ -95,8 +92,8 @@ def restaurant(rest_id):
                     minutes = remainder / 60
                     schedule["endTime"] = "{:02}:{:02}".format(int(hours), int(minutes))
                 rest_data["operating_hours"] = operating_hours
-                '''
-                return data
+
+                return rest_data
             else:
                 return "Invalid restaurants id", 400
 
@@ -119,7 +116,6 @@ def restaurant(rest_id):
                 },
             )
 
-        # MORE non-functional code, again kept in case of future development
         # def rebuild_restaurant(table, fields, data):
         #     with get_cursor() as cursor:
         #         cursor.execute(f"delete from {table} where restId = %s", rest_id)
@@ -161,7 +157,6 @@ def restaurant(rest_id):
 def get_restaurant_reviews(restaurantID):
     try:
         with get_cursor() as cursor:
-            # Execute a query to fetch all reviews for a specific restaurant
             cursor.execute(
                 """
                 SELECT 
@@ -185,16 +180,13 @@ def get_restaurant_reviews(restaurantID):
                 """,
                 (restaurantID,),
             )
-            records = cursor.fetchall()  # Fetch all the review records
+            records = cursor.fetchall()
 
         if records:
-            return records, 200  # Return the reviews if found
+            return records, 200
         else:
-            return {
-                "error": "No reviews found for this restaurant"
-            }, 404  # Handle case where no reviews are found
+            return {"error": "No reviews found for this restaurant"}, 404
 
     except Exception as e:
-        # Log and return an error message if something goes wrong during the query execution
         current_app.logger.error(f"Error fetching reviews: {e}")
         return {"error": "An error occurred while fetching reviews"}, 500
