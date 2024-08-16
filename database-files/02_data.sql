@@ -166,7 +166,7 @@ VALUES (1, 'The Foodies Club', 'A group of food enthusiasts exploring cuisines.'
 INSERT INTO Customer(id, longitude, latitude, email, firstName, middleInitial, lastName)
 VALUES (1, -73.935242, 40.730610, 'john.doe@example.com', 'Emma', 'A', 'Doe'),
        (2, -118.243683, 34.052235, 'jane.smith@example.com', 'Jane', 'B', 'Smith'),
-       (3, -87.629799, 41.878113, 'samuel.brown@example.com', 'Samuel', 'C', 'Brown'),
+       (3, -87.629799, 41.878113, 'Emanuel.brown@example.com', 'Emanuel', 'C', 'Brown'),
        (4, -0.127758, 51.507351, 'emily.jones@example.com', 'Emily', NULL, 'Jones'),
        (5, 2.352222, 48.856613, 'liam.johnson@example.com', 'Liam', 'D', 'Johnson'),
        (6, 151.209290, -33.868820, 'olivia.davis@example.com', 'Olivia', 'E', 'Davis'),
@@ -249,7 +249,7 @@ values (27, 5),
        (18, 18),
        (17, 15),
        (19, 17),
-       (7, 1),
+       (3, 1),
        (16, 29),
        (10, 26),
        (26, 21);
