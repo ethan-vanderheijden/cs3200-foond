@@ -17,6 +17,7 @@ if st.button("Get Lowest Average Restaurants"):
     if response.status_code == 200:
         data = response.json()
         if data:
+            # Show the data received
             st.write(f"Lowest Average {category.capitalize()} Score Restaurants:")
             for restaurant in data:
                 st.write(f"- {restaurant['name']}: {restaurant['avg_score']}")

@@ -2,12 +2,13 @@ from flask import Blueprint, request, current_app, jsonify
 from backend.db_connection import get_cursor
 
 
-
 restaurants = Blueprint("restaurants", __name__, url_prefix="/restaurants")
+
 
 @restaurants.route("/", methods=["GET"])
 def restaurant2():
     return jsonify("")
+
 
 @restaurants.route("/<rest_id>", methods=["GET", "PUT"])
 def restaurant(rest_id):
@@ -162,6 +163,7 @@ def restaurant(rest_id):
 def get_restaurant_reviews(restaurantID):
     try:
         with get_cursor() as cursor:
+            # Execute a query to fetch all reviews for a specific restaurant
             cursor.execute(
                 """
                 SELECT 
@@ -185,13 +187,16 @@ def get_restaurant_reviews(restaurantID):
                 """,
                 (restaurantID,),
             )
-            records = cursor.fetchall()
+            records = cursor.fetchall()  # Fetch all the review records
 
         if records:
-            return records, 200
+            return records, 200  # Return the reviews if found
         else:
-            return {"error": "No reviews found for this restaurant"}, 404
+            return {
+                "error": "No reviews found for this restaurant"
+            }, 404  # Handle case where no reviews are found
 
     except Exception as e:
+        # Log and return an error message if something goes wrong during the query execution
         current_app.logger.error(f"Error fetching reviews: {e}")
         return {"error": "An error occurred while fetching reviews"}, 500

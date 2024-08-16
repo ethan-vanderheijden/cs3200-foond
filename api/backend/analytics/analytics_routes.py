@@ -1,15 +1,18 @@
 from flask import Blueprint, jsonify
 from backend.db_connection import get_cursor
 
+# Blueprint for analytics routes
 analytics = Blueprint("analytics", __name__, url_prefix="/analytics")
 
 
-# Route to get restaurants with the lowest average in a single category
+# Route to get restaurants with the lowest average score in a specific category
 @analytics.route("/<category>", methods=["GET"])
 def get_lowest_average(category):
+    # Validate category input
     if category not in ["price", "cuisine", "formality"]:
         return jsonify({"error": "Invalid category"}), 400
 
+    # Execute query to find the lowest average scores in the specified category
     with get_cursor() as cursor:
         cursor.execute(
             f"""
@@ -25,6 +28,7 @@ def get_lowest_average(category):
         )
         results = cursor.fetchall()
 
+    # Return results or an error if no data is found
     if results:
         return jsonify(results)
     else:
