@@ -34,14 +34,7 @@ def reviews_info(cust_id, seq_num):
         """
         )
         with get_cursor() as cursor:
-            # Delete the review from the Recommendation_Review table
-            cursor.execute(
-                """
-                delete from Recommendation_Review where custId = %(cust)s and seqNum = %(seq)s
-                """,
-                {"cust": cust_id, "seq": seq_num},
-            )
-            return ""  # Return an empty response
-
+            cursor.execute(sql)
+            return ""
     # Log the data for debugging purposes
     current_app.logger.info(data)
