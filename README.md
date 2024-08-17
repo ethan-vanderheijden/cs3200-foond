@@ -1,4 +1,4 @@
-# Summer 2024 CS 3200 Project Template Repository
+# Summer 2024 CS 3200 Foond Project Repository
 
 > [!IMPORTANT]  
 > ### To all contributors - please install the Python Black pre-commit hook
@@ -14,5 +14,5 @@
 
 
 ## About
-
-TODO...
+Foond is an app to help people find food.
+Created by Aadi Sharma, Akash Surendran, Eli Pinals, Ethan Carpenter, Ethan Van Der Heijden.
