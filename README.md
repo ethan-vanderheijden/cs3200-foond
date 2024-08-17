@@ -1,18 +1,20 @@
-# Summer 2024 CS 3200 Foond Project Repository
+#CS3200 Project Phase 3
+##Overview
+This project is designed to help users around Boston find suitable restaurants based on their preferences and needs. The application features functionalities such as account management, recommendations, group management, and administrative oversight.
 
-> [!IMPORTANT]  
-> ### To all contributors - please install the Python Black pre-commit hook
-> First, install Black
-> ```
-> pip install black
-> ```
-> Then, copy `githooks/pre-commit` to `.git/hooks/pre-commit`
-> On Linux, you can create a symlink with the following:
-> ```
-> ln -s $(realpath githooks/pre-commit) .git/hooks/pre-commit
-> ```
+Landing Page: Details about the app and its functionalities.
+Emma’s Pages:
 
+Change account details (preferences, name, location)
+Get recommendations based on current account details and leave a review on a recommendation
 
-## About
-Foond is an app to help people find food.
-Created by Aadi Sharma, Akash Surendran, Eli Pinals, Ethan Carpenter, Ethan Van Der Heijden.
+###Emilio’s Pages:
+View backend data (e.g., recommended reviews)
+View restaurants with consistently low scores in one category.
+View all reviews for a single restaurant.
+Admin page to edit incorrect information (price, formality, cuisine, hours, location)
+
+###Emmanuel’s Pages:
+Create a new group and add people to an existing group
+Search for group recommendations
+
