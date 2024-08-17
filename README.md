@@ -8,13 +8,14 @@ The application features functionalities such as account management, recommendat
 
 Landing Page: Details about the app and its functionalities.
 
-Emma’s Pages:
+**Emma’s Pages:**
 
 Change account details (preferences, name, location)
 
 Get recommendations based on current account details and leave a review on a recommendation
 
 **Emilio’s Pages:**
+
 View backend data (e.g., recommended reviews)
 
 View restaurants with consistently low scores in one category.
