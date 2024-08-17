@@ -105,18 +105,18 @@ def get_group_members(group_id):
 
 @groups.route("/<group_id>/recommendationsFor", methods=["GET"])
 def group_get_for(group_id):
-    data = request.json()
-    logger.error(data)
     sql = """
-        SELECT cui.name AS name
+        SELECT r.name AS name
         FROM Dining_Group dg
         JOIN Cust_Group cg ON dg.id = cg.custId
         JOIN Customer c ON c.id = cg.custId
         JOIN Cust_Cuisine cc ON cc.custId = c.id
         JOIN Cuisine cui ON cui.id = cc.custId
+        JOIN Rest_Cuisine rc ON rc.cuisineId = cui.id
+        JOIN Restaurant r ON r.id = rc.restId
         WHERE dg.id = """ + str(group_id) + """
-        GROUP BY cui.id, cui.name
-        ORDER BY COUNT(c.id)
+        GROUP BY r.id, r.name
+        ORDER BY COUNT(r.id)
         LIMIT 1;
         """
     with get_cursor() as cursor:
@@ -134,10 +134,8 @@ def group_get_for(group_id):
 
 @groups.route("/<group_id>/recommendationsAvoid", methods=["GET"])
 def group_get_avoid(group_id):
-    data = request.json()
-    logger.error(data)
-    sql = """
-        SELECT cui.name AS name
+    sql1 = """
+        SELECT cui.id AS id
         FROM Dining_Group dg
         JOIN Cust_Group cg ON dg.id = cg.custId
         JOIN Customer c ON c.id = cg.custId
@@ -149,14 +147,24 @@ def group_get_avoid(group_id):
         LIMIT 1;
         """
     with get_cursor() as cursor:
-        logger.error(sql)
         try:
             with get_cursor() as cursor:
-                cursor.execute(sql)
+                cursor.execute(sql1)
                 data = cursor.fetchall()
-                logger.error(data)
+
+                sql2 = """
+                        SELECT rst.name AS name
+                        FROM Restaurant rst
+                        JOIN Rest_Cuisine rc ON rc.restId = rst.id
+                        WHERE rc.cuisineId <> (""" + ", ".join([str(x["id"]) for x in data]) + """)
+                        LIMIT 1;
+                        """
+                cursor.execute(sql2)
+                data = cursor.fetchall()
+
+                logger.error(sql2)
                 logger.info(f"Retrieved recommendations for group {data}")
                 return jsonify(data), 200
         except Exception as e:
             logger.error(f"Failed to get recommendation: {str(e)}")
-            return jsonify({"error": "Failed to get recommendation details " + str(e) + " " + sql}), 500
+            return jsonify({"error": "Failed to get recommendation details " + str(e)}), 500

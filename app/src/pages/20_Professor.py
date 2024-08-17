@@ -55,42 +55,44 @@ def create_new_group(name, description=""):
         st.error("Failed to create group")
 
 def display_recommendation_for_my_group(groupId):
-    st.write(f"{backend_url}/{groupId}/recommendationsFor")
     response = requests.get(f"{backend_url}/{groupId}/recommendationsFor")
-    print(response)
     if response.status_code == 200:
         members = response.json()
-        st.write(f"Recommendation for {groupId}:")
-        st.write(members)
+        st.write(f"Recommendation for users in group: {groupId}:")
+        for member in members:
+            st.write("- " + member["name"])
     else:
         st.error("Group not found " + str(response))
 
 def display_recommendation_avoiding_group(groupId):
-    st.write(f"{backend_url}/{groupId}/recommendationsAvoid")
     response = requests.get(f"{backend_url}/{groupId}/recommendationsAvoid")
-    print(response)
     if response.status_code == 200:
         members = response.json()
-        st.write(f"Recommendation for {groupId}:")
-        st.write(members)
+        st.write(f"Avoiding users in group: {groupId}:")
+        for member in members:
+            st.write("- " + member["name"])
     else:
         st.error("Group not found " + str(response.json()))
 
 # Initialize session state for page and action
-if "page" not in st.session_state:
-    st.session_state.page = "Professor Home"
+if "page_type" not in st.session_state:
+    st.session_state["page_type"] = "Professor Home"
 if "action" not in st.session_state:
     st.session_state.action = "Create New Group"
 
 # Streamlit UI for Emanuel
 st.title("Welcome Databasing Professor, Emanuel.")
 
-st.sidebar.header("Navigation")
-st.session_state.page = st.sidebar.selectbox(
-    "Go to", ["Manage Groups", "Generate Group Recommendations"], index=0
-)
+if st.session_state["page_type"] == "Generate Group Recommendations":
+    st.session_state["page_type"] = st.sidebar.selectbox(
+        "Go to", ["Generate Group Recommendations", "Manage Groups"], index=0
+    )
+else:
+    st.session_state["page_type"] = st.sidebar.selectbox(
+        "Go to", ["Manage Groups", "Generate Group Recommendations"], index=0
+    )
 
-if st.session_state.page == "Manage Groups":
+if st.session_state["page_type"] == "Manage Groups":
     st.header("Manage Groups")
     st.session_state.action = st.selectbox(
         "Action",
@@ -124,16 +126,17 @@ if st.session_state.page == "Manage Groups":
         groupId = st.text_input("Enter Group ID")
         if st.button("Display Users"):
             display_users_in_group(groupId)
-elif st.session_state.page == "Generate Group Recommendations":
-    groupId = 1
-    st.session_state["Group Type"] = st.selectbox(
+elif st.session_state["page_type"] == "Generate Group Recommendations":
+    st.session_state["GroupType"] = st.selectbox(
         "Search Type",
         [
             "Select for my group's preferences",
-            "avoid user group",
+            "Avoid user group",
         ],
     )
-    if st.session_state["Group Type"] == "Select for my group's preferences":
-        display_recommendation_for_my_group(groupId)
-    elif st.session_state["Group Type"] == "avoid user group":
-        display_recommendation_avoiding_group(groupId)
+    groupId = st.text_input("Enter Group ID")
+    if st.button("Display Recommendation"):
+        if st.session_state["GroupType"] == "Select for my group's preferences":
+            display_recommendation_for_my_group(groupId)
+        elif st.session_state["GroupType"] == "Avoid user group":
+            display_recommendation_avoiding_group(groupId)
