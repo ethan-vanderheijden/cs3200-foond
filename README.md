@@ -1,8 +1,13 @@
-**CS3200 Project Phase 3**
+**CS3200 Project Foond**
 **Overview**
-This project is designed to help users around Boston find suitable restaurants based on their preferences and needs. The application features functionalities such as account management, recommendations, group management, and administrative oversight.
+
+**By eAEaE**
+
+This project is designed to help users around Boston find suitable restaurants based on their preferences and needs. 
+The application features functionalities such as account management, recommendations, group management, and administrative oversight.
 
 Landing Page: Details about the app and its functionalities.
+
 Emma’s Pages:
 
 Change account details (preferences, name, location)
