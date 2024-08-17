@@ -41,4 +41,5 @@ if st.button("Emanuel, the grumpy Databasing Professor", type="primary", use_con
     st.session_state["authenticated"] = True
     st.session_state["role"] = "professor"
     st.session_state["first_name"] = "Emanuel"
+    st.session_state["default_user_id"] = 3
     st.switch_page("pages/20_Professor.py")

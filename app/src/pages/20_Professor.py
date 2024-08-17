@@ -54,8 +54,20 @@ def create_new_group(name, description=""):
     else:
         st.error("Failed to create group")
 
-def display_recommendation_for_group(groupId):
-    response = requests.get(f"{backend_url}/{groupId}/recommendations")
+def display_recommendation_for_my_group(groupId):
+    st.write(f"{backend_url}/{groupId}/recommendationsFor")
+    response = requests.get(f"{backend_url}/{groupId}/recommendationsFor")
+    print(response)
+    if response.status_code == 200:
+        members = response.json()
+        st.write(f"Recommendation for {groupId}:")
+        st.write(members)
+    else:
+        st.error("Group not found " + str(response))
+
+def display_recommendation_avoiding_group(groupId):
+    st.write(f"{backend_url}/{groupId}/recommendationsAvoid")
+    response = requests.get(f"{backend_url}/{groupId}/recommendationsAvoid")
     print(response)
     if response.status_code == 200:
         members = response.json()
@@ -86,8 +98,7 @@ if st.session_state.page == "Manage Groups":
             "Create New Group",
             "Add User to Group",
             "Remove User from Group",
-            "Display Users in Group",
-            "Generate Group Recommendations",
+            "Display Users in Group"
         ],
     )
 
@@ -114,7 +125,15 @@ if st.session_state.page == "Manage Groups":
         if st.button("Display Users"):
             display_users_in_group(groupId)
 elif st.session_state.page == "Generate Group Recommendations":
-    st.session_state.action = "Generate Group Recommendations"
-    groupId = st.text_input("Enter Group ID")
-    if st.button("Display Recommendations"):
-        display_recommendation_for_group(groupId)
+    groupId = 1
+    st.session_state["Group Type"] = st.selectbox(
+        "Search Type",
+        [
+            "Select for my group's preferences",
+            "avoid user group",
+        ],
+    )
+    if st.session_state["Group Type"] == "Select for my group's preferences":
+        display_recommendation_for_my_group(groupId)
+    elif st.session_state["Group Type"] == "avoid user group":
+        display_recommendation_avoiding_group(groupId)
